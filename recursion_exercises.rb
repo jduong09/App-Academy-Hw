@@ -106,3 +106,95 @@ def iter_fibonacci(n)
 
   return ans
 end
+
+# Bsearch
+# find middle element of the array
+# check if the num is greater than or less than the middle element
+# check the side that the num is on.
+def bsearch(array, num)
+  return nil if array == []
+
+  mid_element = array.length / 2
+
+  if array[mid_element] ==  num
+    return mid_element
+  elsif array[mid_element] > num
+    calls = bsearch(array[0...mid_element], num)
+  elsif array[mid_element] < num
+    calls = bsearch(array[mid_element + 1..-1], num)
+    calls.nil? ? nil : calls + mid_element + 1
+  end
+end
+
+# Combine sorted arrays
+  # Needs to sort the two arrays into one sorted array.
+def merge(array_one, array_two)
+  new_array = []
+
+  while !array_one.empty? && !array_two.empty?
+    if array_one.first <= array_two.first
+      new_array << array_one.first
+      array_one = array_one[1..-1]
+    else 
+      new_array << array_two.first
+      array_two = array_two[1..-1]
+    end
+  end
+  
+  while !array_one.empty?
+     new_array << array_one.first
+     array_one = array_one[1..-1]
+  end
+
+  while !array_two.empty?
+    new_array << array_two.first
+    array_two = array_two[1..-1]
+  end
+
+  return new_array
+
+end
+
+class Array
+  # Divide array in half and call merge_sort on each half
+    # do this until you reach base case.
+      # base case would be array.length == 1, and array.length == 0
+        # this is because [3] and [] are both sorted.
+    # use merge helper method to combine sorted arrays
+      # [38] merged with [27] should return [27, 38]
+  def merge_sort
+    return [] if self.length == 0
+    return self if self.length == 1
+
+    mid = self.length / 2
+
+    leftside = self[0...mid].merge_sort
+    rightside = self[mid..-1].merge_sort
+
+    array = merge(leftside, rightside)
+
+    return array
+
+
+  end
+end
+
+#array = [6, 3, 2, 4, 1, 7, 9]
+#puts array.merge_sort
+
+
+def bubble_sort(array)
+  is_sorted = false
+
+  while is_sorted == false
+    is_sorted = true
+    (0...array.length - 1).each do |idx|
+      if array[idx] > array[idx + 1]
+        array[idx], array[idx + 1] = array[idx + 1], array[idx]
+        is_sorted = false
+      end
+    end
+  end
+  array
+end
+
