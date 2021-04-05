@@ -174,14 +174,27 @@ class Array
     array = merge(leftside, rightside)
 
     return array
-
-
   end
-end
+
 
 #array = [6, 3, 2, 4, 1, 7, 9]
 #puts array.merge_sort
 
+
+  # Very confused!
+  def subsets
+    #base case
+    return [[]] if self == []
+
+    #inductive step
+    subset = self[0...-1].subsets
+
+    subset.concat( subset.map { |x| x += self[-1]} )
+  end
+end
+
+#array = [[1]]
+#print array.subsets
 
 def bubble_sort(array)
   is_sorted = false
@@ -198,3 +211,57 @@ def bubble_sort(array)
   array
 end
 
+#Write a recursive method permutations(array) that calculates all the permutations of the given array. 
+#For an array of length n there are n! different permutations.
+#So for an array with three elements we will have 3 * 2 * 1 = 6 different permutations.
+
+def permutations(array)
+  return [array] if array.length <= 1
+
+  first = array.shift
+
+  perms = permutations(array)
+
+  total = []
+
+  perms.each do |perm|
+    (0..perm.length).each do |i|
+      total << perm[0...i] + [first] + perm[i..-1]
+    end
+  end
+
+  total
+end
+
+#print permutations([1, 2, 3])
+# => [[1, 2, 3], [1, 3, 2], [2, 1, 3], [2, 3, 1], [3, 1, 2], [3, 2, 1]]
+
+def make_change_iter(amount, coins = [25, 10, 5, 1])
+  change = []
+ 
+  until amount == 0
+    if amount >= coins[0]
+      change << coins[0]
+      amount -= coins[0]
+    else
+      coins.shift
+    end
+
+  end
+  change
+end
+
+#print make_change_iter(39)
+
+def greedy_make_change(amount, coins = [25, 10, 5, 1])
+  return if amount == 0
+
+  if amount >= coins[0]
+    remaining = amount - coins[0]
+  else
+    greedy_make_change()
+
+end
+
+print greedy_make_change(39)
+#[25, 10, 1, 1, 1, 1]
