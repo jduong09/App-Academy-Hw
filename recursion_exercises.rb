@@ -254,14 +254,46 @@ end
 #print make_change_iter(39)
 
 def greedy_make_change(amount, coins = [25, 10, 5, 1])
-  return if amount == 0
+  return [] if amount == 0
 
-  if amount >= coins[0]
-    remaining = amount - coins[0]
+  if amount < coins[0]
+    change = greedy_make_change(amount, coins[1..-1])
   else
-    greedy_make_change()
+    change_used = coins[0]
+    change = greedy_make_change(amount - change_used, coins)
+    change.unshift(change_used)
+  end
 
 end
 
-print greedy_make_change(39)
+#print greedy_make_change(39)
 #[25, 10, 1, 1, 1, 1]
+
+#Consider the case of greedy_make_change(24, [10,7,1]). 
+#Because it takes as many 10 pieces as possible, greedy_make_change misses the correct answer of [10,7,7] 
+#print greedy_make_change(24, coins = [10, 7, 1])
+
+#To make_better_change, we only take one coin at a time and never rule out denominations that we've already used. 
+#This allows each coin to be available each time we get a new remainder. 
+#By iterating over the denominations and continuing to search for the best change, we assure that we test for 'non-greedy' uses of each denomination.
+
+def make_better_change(amount, coins = [25, 10, 5, 1])
+  return [] if amount == 0
+
+  best_change = nil
+
+  coins.each do |coin|
+    next if coin > amount
+
+    remainder = make_better_change(amount - coin, coins)
+
+    change = [coin] + remainder
+
+    if best_change.nil? || change.count < best_change.count
+      best_change = change
+    end
+  end
+  best_change
+end
+
+#print make_better_change(14, [10, 7, 1])
